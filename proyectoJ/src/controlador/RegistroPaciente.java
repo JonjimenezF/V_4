@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import modelo.Medico;
 import modelo.Paciente;
 
 /**
@@ -21,7 +20,7 @@ public class RegistroPaciente {
             Conexion con = new Conexion();
             Connection cnx = con.obtenerConexion();
 
-            String query = "INSERT INTO paciente(Rut,nombre,genero,isapre,edad,celular) VALUES (?,?,?,?,?,?)";
+            String query = "INSERT INTO paciente(rutP,nombre,genero,isapre,edad,celular) VALUES (?,?,?,?,?,?)";
             PreparedStatement stmt = cnx.prepareCall(query);
             stmt.setString(1, paciente.getRut());
             stmt.setString(2, paciente.getNombre());
@@ -48,7 +47,7 @@ public class RegistroPaciente {
             Conexion con = new Conexion();
             Connection cnx = con.obtenerConexion();
 
-            String query = "UPDATE paciente SET nombre = ?,edad = ?,celular = ? WHERE rut = ?";
+            String query = "UPDATE paciente SET nombre = ?,edad = ?,celular = ? WHERE rutP = ?";
             PreparedStatement stmt = cnx.prepareCall(query);
             stmt.setString(1, nombreNew);
             stmt.setInt(2, edadNew);
@@ -75,13 +74,13 @@ public class RegistroPaciente {
             Conexion con = new Conexion();
             Connection cnx = con.obtenerConexion();
 
-            String query = "SELECT * FROM paciente WHERE rut = ? ";
+            String query = "SELECT * FROM paciente WHERE rutP = ? ";
             PreparedStatement stmt = cnx.prepareCall(query);
             stmt.setString(1, rut);
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                p.setRut(rs.getString("rut"));
+                p.setRut(rs.getString("rutP"));
                 p.setNombre(rs.getString("nombre"));
                 p.setGenero(rs.getString("genero"));
                 p.setIsapre(rs.getString("isapre"));
@@ -121,7 +120,7 @@ public class RegistroPaciente {
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
                 Paciente p = new Paciente();
-                p.setRut(rs.getString("rut"));
+                p.setRut(rs.getString("rutP"));
                 p.setNombre(rs.getString("nombre"));
                 p.setGenero(rs.getString("genero"));
                 p.setIsapre(rs.getString("isapre"));
@@ -136,7 +135,7 @@ public class RegistroPaciente {
                 stmt.close();
                 cnx.close();
             }else{
-                query = "SELECT * FROM paciente WHERE rut = ? ";
+                query = "SELECT * FROM paciente WHERE rutP = ? ";
                 PreparedStatement stmt = cnx.prepareCall(query);
                 stmt.setString(1, rut);
                 
@@ -144,7 +143,7 @@ public class RegistroPaciente {
                 if (rs.next()) {
                 Paciente p = new Paciente();
                  
-                p.setRut(rs.getString("rut"));
+                p.setRut(rs.getString("rutP"));
                 p.setNombre(rs.getString("nombre"));
                 p.setGenero(rs.getString("genero"));
                 p.setIsapre(rs.getString("isapre"));

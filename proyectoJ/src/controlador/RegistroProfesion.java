@@ -18,14 +18,14 @@ public class RegistroProfesion {
     
     
     //AGREGAR PROFESION(NOMBRE)
-    public boolean agregarProfesion(TipoProfesion tipoProfesion) {
+    public boolean agregarProfesion(TipoProfesion tipoprofesion) {
         try {
             Conexion con = new Conexion();
             Connection cnx = con.obtenerConexion();
 
             String query = "INSERT INTO tipoprofesion(nombre) VALUES (?)";
             PreparedStatement stmt = cnx.prepareCall(query);
-            stmt.setString(1, tipoProfesion.getNombre());
+            stmt.setString(1, tipoprofesion.getNombre());
 
             stmt.executeUpdate();
             stmt.close();

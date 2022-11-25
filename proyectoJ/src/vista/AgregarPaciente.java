@@ -308,6 +308,7 @@ public class AgregarPaciente extends javax.swing.JFrame {
         this.jtxt_rut.setText("");
         this.jtxt_nombre.setText("");
         this.jtxt_edad.setText("");
+        this.jtxt_celular.setText("");
         btnG_myf.clearSelection();
         btnG_sino.clearSelection();      
         this.jtxt_rut.requestFocus();

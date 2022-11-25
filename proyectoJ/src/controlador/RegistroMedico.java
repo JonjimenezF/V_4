@@ -23,7 +23,7 @@ public class RegistroMedico {
             Conexion con = new Conexion();
             Connection cnx = con.obtenerConexion();
             
-            String query = "INSERT INTO Medico(rut,nombre,genero,idProfesion) VALUES (?,?,?,?)";
+            String query = "INSERT INTO Medico(rutM,nombre,genero,idProfesion) VALUES (?,?,?,?)";
             PreparedStatement stmt = cnx.prepareCall(query);
             stmt.setString(1, medico.getRut());
             stmt.setString(2, medico.getNombre());
@@ -51,7 +51,7 @@ public class RegistroMedico {
             Conexion con = new Conexion();
             Connection cnx = con.obtenerConexion();
 
-            String query = "DELETE FROM medico WHERE ruT = ?";
+            String query = "DELETE FROM medico WHERE rutM = ?";
             PreparedStatement stmt = cnx.prepareCall(query);
             stmt.setString(1, rut);
 
@@ -79,7 +79,7 @@ public class RegistroMedico {
             Conexion con = new Conexion();
             Connection cnx = con.obtenerConexion();
 
-            String query = "UPDATE medico SET nombre = ? WHERE rut = ?";
+            String query = "UPDATE medico SET nombre = ? WHERE rutM = ?";
             PreparedStatement stmt = cnx.prepareCall(query);
             stmt.setString(1, nombreNew);
             
@@ -105,13 +105,13 @@ public class RegistroMedico {
             Conexion con = new Conexion();
             Connection cnx = con.obtenerConexion();
 
-            String query = "SELECT * FROM medico WHERE rut = ? ";
+            String query = "SELECT * FROM medico WHERE rutM = ? ";
             PreparedStatement stmt = cnx.prepareCall(query);
             stmt.setString(1, rut);
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                m.setRut(rs.getString("rut"));
+                m.setRut(rs.getString("rutM"));
                 m.setNombre(rs.getString("nombre"));
                 m.setGenero(rs.getString("genero"));               
                 m.setIdProfesion(rs.getInt("idProfesion"));
@@ -151,7 +151,7 @@ public class RegistroMedico {
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
                 Medico m = new Medico();
-                m.setRut(rs.getString("rut"));
+                m.setRut(rs.getString("rutM"));
                 m.setNombre(rs.getString("nombre"));
                 m.setGenero(rs.getString("genero"));               
                 m.setIdProfesion(rs.getInt("idProfesion"));
@@ -163,14 +163,14 @@ public class RegistroMedico {
                 stmt.close();
                 cnx.close();
             }else{
-                query = "SELECT * FROM paciente WHERE rut = ? ";
+                query = "SELECT * FROM paciente WHERE rutM = ? ";
                 PreparedStatement stmt = cnx.prepareCall(query);
                 stmt.setString(1, rut);
                 
                 ResultSet rs = stmt.executeQuery();
                 if (rs.next()) {
                 Medico m = new Medico();
-                m.setRut(rs.getString("rut"));
+                m.setRut(rs.getString("rutM"));
                 m.setNombre(rs.getString("nombre"));
                 m.setGenero(rs.getString("genero"));
                 m.setIdProfesion(rs.getInt("idProfesion"));
