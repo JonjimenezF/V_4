@@ -63,7 +63,7 @@ public class AgregarPaciente extends javax.swing.JFrame {
         jbtn_limpiar = new javax.swing.JButton();
         jbtn_salir = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(153, 255, 255));
 
@@ -299,7 +299,7 @@ public class AgregarPaciente extends javax.swing.JFrame {
     }//GEN-LAST:event_jbtn_guardarActionPerformed
 
     private void jbtn_salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtn_salirActionPerformed
-        // TODO add your handling code here:
+        
         dispose();
     }//GEN-LAST:event_jbtn_salirActionPerformed
 
