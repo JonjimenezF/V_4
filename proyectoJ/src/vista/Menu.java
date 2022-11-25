@@ -13,12 +13,33 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import modelo.Atencion;
 
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author jimen
  */
 public class Menu extends javax.swing.JFrame {
 
+    private static String emailFrom = "jimenez.jonathan1830@gmail.com";
+    private static String passwordFrom = "yienkoszpmodsxtn";
+    private String emailTo;
+    private String subject;
+    private String content;
+    
+    
+    private Properties mProperties;
+    private Session mSession;
+    private MimeMessage mCorreo;
     /**
      * Creates new form Menu
      */
@@ -26,11 +47,62 @@ public class Menu extends javax.swing.JFrame {
     //JDateChooser jdfecha;
     public Menu() {
         initComponents();
+        mProperties = new Properties();
         
         /*
         jdfecha = new JDateChooser();
         jPanel1.add(jdfecha);
         jdfecha.setBounds(210, 30, 170, 20);*/
+    }
+    
+    private void createEmail(String mensaje){
+        
+        emailTo = jtxt_correo.getText().trim();
+        subject = "Hora registrada";
+        content = mensaje;
+        
+        mProperties.put("mail.smtp.host", "smtp.gmail.com");
+        mProperties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        mProperties.setProperty("mail.smtp.starttls.enable", "true");
+        mProperties.setProperty("mail.smtp.port", "587");
+        mProperties.setProperty("mail.smtp.user",emailFrom);
+        mProperties.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
+        mProperties.setProperty("mail.smtp.auth", "true");
+        
+        mSession = Session.getDefaultInstance(mProperties);
+        
+        
+        try {
+            mCorreo = new MimeMessage(mSession);
+            mCorreo.setFrom(new InternetAddress(emailFrom));
+            mCorreo.setRecipient(Message.RecipientType.TO, new InternetAddress(emailTo));
+            mCorreo.setSubject(subject);
+            mCorreo.setText(content, "ISO-8859-1", "html");
+        } catch (AddressException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MessagingException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    
+    private void sendEmail(){
+        
+        try {
+            Transport mTransport = mSession.getTransport("smtp");
+            mTransport.connect(emailFrom, passwordFrom);
+            mTransport.sendMessage(mCorreo, mCorreo.getRecipients(Message.RecipientType.TO));
+            mTransport.close();
+            
+            JOptionPane.showMessageDialog(null, "correo enviado");
+            
+        } catch (NoSuchProviderException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MessagingException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
     }
 
     /**
@@ -52,6 +124,8 @@ public class Menu extends javax.swing.JFrame {
         jtxt_rutP = new javax.swing.JTextField();
         jcb_hora = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jtxt_correo = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jbtn_limpiar = new javax.swing.JButton();
@@ -72,6 +146,7 @@ public class Menu extends javax.swing.JFrame {
         jMenuItem10 = new javax.swing.JMenuItem();
         jMenuItem11 = new javax.swing.JMenuItem();
         jMenuItem12 = new javax.swing.JMenuItem();
+        jMenuItem13 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem9 = new javax.swing.JMenuItem();
 
@@ -93,53 +168,63 @@ public class Menu extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel5.setText("Agendar Hora");
 
+        jLabel6.setText("Correo Paciente:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(11, 11, 11)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(67, 67, 67)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jdc_fecha, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-                                .addComponent(jtxt_rutM)
-                                .addComponent(jtxt_rutP))
-                            .addComponent(jcb_hora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel5)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(18, 18, 18)
+                                .addComponent(jcb_hora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(56, 56, 56)
-                        .addComponent(jLabel5)))
-                .addContainerGap(36, Short.MAX_VALUE))
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel2))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jtxt_rutM, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jdc_fecha, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                            .addComponent(jtxt_rutP)
+                            .addComponent(jtxt_correo, javax.swing.GroupLayout.Alignment.LEADING))))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jcb_hora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jdc_fecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(19, 19, 19)
+                .addGap(17, 17, 17)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jtxt_rutM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jtxt_rutP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jtxt_correo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(51, 204, 255));
@@ -292,6 +377,14 @@ public class Menu extends javax.swing.JFrame {
 
         jMenu1.add(jMenu5);
 
+        jMenuItem13.setText("jMenuItem13");
+        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem13ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem13);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Salir");
@@ -418,11 +511,12 @@ public class Menu extends javax.swing.JFrame {
         String hora = "";
         String rutP = "";
         String rutM = "";
+        String correo = "";
         
         
         Date nfecha = jdc_fecha.getDate();
         long fecha = nfecha.getTime();
-        java.sql.Date fecha_sql = new java.sql.Date(fecha);
+        java.sql.Date fecha_sql = new java.sql.Date(fecha);//creamos una variable de tipo date
         
         if (this.jcb_hora.getSelectedIndex() > 0) {
             hora = (String) jcb_hora.getSelectedItem();
@@ -444,18 +538,30 @@ public class Menu extends javax.swing.JFrame {
             rutP = this.jtxt_rutP.getText();
         }
         
+        if (this.jtxt_correo.getText().equalsIgnoreCase("")) {
+            JOptionPane.showMessageDialog(null, "Ingrese el correo del paciente", "Aviso", 2);
+        }else{
+            correo = this.jtxt_correo.getText();
+        }
 
-
-        Atencion p = new Atencion(0,fecha_sql, hora, rutM, rutP);
-
-        RegistroAtencion ra = new RegistroAtencion();
-
-        if (ra.agregarAtencion(p)) {
-                JOptionPane.showConfirmDialog(null, "Atencion Ingresada", "Datos ingresado del la Atencion", 1);
-        } else {               
-                JOptionPane.showConfirmDialog(null, "Atencion no Ingresada", "Datos no ingresado del la Atecion", 1);
-            }
         
+        if (hora.equalsIgnoreCase("") || rutM.equalsIgnoreCase("") || rutP.equalsIgnoreCase("") || correo.equalsIgnoreCase("")) {
+            JOptionPane.showMessageDialog(null, "Ingrese los datos", "Aviso", 2);
+        }else{
+            
+            Atencion p = new Atencion(0,fecha_sql, hora, rutM, rutP);
+
+            RegistroAtencion ra = new RegistroAtencion();
+
+            if (ra.agregarAtencion(p)) {
+                    JOptionPane.showConfirmDialog(null, "Atencion Ingresada", "Datos ingresado del la Atencion", 1);
+                    String mensaje ="Hora: " + (String) jcb_hora.getSelectedItem()+"\n"+"Fecha: "+ fecha_sql +"\n"+ "Rut Paciente: " + rutP;
+                    createEmail(mensaje);
+                    sendEmail();
+            } else {               
+                    JOptionPane.showConfirmDialog(null, "Atencion no Ingresada", "Datos no ingresado del la Atecion", 1);
+                }
+        } 
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -464,7 +570,7 @@ public class Menu extends javax.swing.JFrame {
         this.jtxt_rutM.setText("");
         this.jtxt_rutP.setText("");
         this.jcb_hora.setSelectedIndex(0);
-        
+        this.jtxt_correo.setText("");
         this.jcb_hora.requestFocus();
         
         
@@ -478,6 +584,11 @@ public class Menu extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jMenuItem13ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -522,6 +633,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -532,6 +644,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
+    private javax.swing.JMenuItem jMenuItem13;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -545,6 +658,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JButton jbtn_limpiar;
     private javax.swing.JComboBox<String> jcb_hora;
     private com.toedter.calendar.JDateChooser jdc_fecha;
+    private javax.swing.JTextField jtxt_correo;
     private javax.swing.JTextField jtxt_rutM;
     private javax.swing.JTextField jtxt_rutP;
     // End of variables declaration//GEN-END:variables

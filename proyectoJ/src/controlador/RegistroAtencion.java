@@ -59,6 +59,7 @@ public class RegistroAtencion {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Atencion a = new Atencion();
+                a.setIdAtencion(rs.getInt("idAtencion"));
                 a.setFecha_Atencion(rs.getDate("fecha_Atencion"));
                 a.setHr_Atencion(rs.getString("hr_Atencion"));
                 a.setRutM(rs.getString("rutM"));
